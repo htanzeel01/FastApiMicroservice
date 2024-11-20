@@ -1,0 +1,40 @@
+# Python Bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Virtual Environment
+venv/
+env/
+
+# Logs and debugging
+*.log
+*.out
+*.err
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+
+# Docker
+*.env
+.dockerignore
+
+# FastAPI or app-specific files
+local.settings.json  # Ensure this file is ignored
+settings.local.json  # A general alternative naming convention
+
+# Test files and coverage reports
+*.pytest_cache/
+.coverage
+*.coverage.*
+
+# Static and media files
+staticfiles/
+media/
+
+# Other
+.DS_Store
+Thumbs.db
