@@ -1,0 +1,108 @@
+name: Deploy FastAPI Microservice to OpenShift
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  # OpenShift and Docker Registry Configuration
+  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  OPENSHIFT_NAMESPACE: "kilo-dev"  # Replace with your OpenShift namespace
+  APP_NAME: "fastapi-app"  # Replace with your app name
+  APP_PORT: "8000"  # Replace with your app's listening port
+  IMAGE_REGISTRY: "docker.io"  # Docker Hub or other registry
+  IMAGE_REGISTRY_USER: "mridul017"
+  IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
+  IMAGE_TAGS: ${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy FastAPI to OpenShift
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Docker Buildx (for multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Build Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} \
+            -f ./Dockerfile \
+            .
+          echo "IMAGE_NAME=${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}" >> $GITHUB_ENV
+          echo "IMAGE_TAGS=${{ env.IMAGE_TAGS }}" >> $GITHUB_ENV
+
+      # Step 4: Docker Login (login to the Docker registry)
+      - name: Docker Login
+        run: |
+          echo ${{ secrets.IMAGE_REGISTRY_PASSWORD }} | docker login ${{ env.IMAGE_REGISTRY }} -u ${{ env.IMAGE_REGISTRY_USER }} --password-stdin
+
+      # Step 5: Push Docker Image to Registry
+      - name: Push Docker Image to Registry
+        run: |
+          docker push ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }}
+
+      # Step 6: Install OpenShift CLI (oc)
+      - name: Install OpenShift CLI
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4.6.0  # Ensure this is the correct version of oc you need
+
+      # Step 7: Log in to OpenShift
+      - name: Log in to OpenShift
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          insecure_skip_tls_verify: true
+          namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+
+      # Step 8: Delete Existing Resources (if any)
+      - name: Delete Existing Resources
+        run: |
+          oc delete all --selector app=${{ env.APP_NAME }} --ignore-not-found
+
+      # Step 9: Deploy and Expose OpenShift App
+      - name: Deploy OpenShift App
+        run: |
+          oc new-app ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REGISTRY_USER }}/${{ env.APP_NAME }}:${{ env.IMAGE_TAGS }} \
+            --name=${{ env.APP_NAME }} \
+            -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+          # Expose the app on port 8000
+          oc expose svc/${{ env.APP_NAME }} --port=${{ env.APP_PORT }} -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+      # Step 10: Inject Environment Variables into Deployment
+      - name: Inject Environment Variables into Deployment
+        run: |
+          oc set env deployment/${{ env.APP_NAME }} \
+            DBKEY=${{ secrets.DBKEY }} \
+            DBURI=${{ secrets.DBURI }} \
+            DBNAME=${{ secrets.DBNAME }} \
+            JWTKEY="${{ secrets.JWTKEY }}" \
+            JWTISSUER="${{ secrets.JWTISSUER }}" \
+            JWTAUDIENCE="${{ secrets.JWTAUDIENCE }}" \
+            -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+      # Step 11: Wait for Deployment Rollout to Complete
+      - name: Wait for Deployment Rollout
+        run: |
+          oc rollout status deployment/${{ env.APP_NAME }} -w -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+      # Step 12: Print Application URL (Once the app is exposed)
+      - name: Print Application URL
+        run: |
+          ROUTE=$(oc get route ${{
+            env.APP_NAME }} -o jsonpath='{.spec.host}' -n ${{ env.OPENSHIFT_NAMESPACE }})
+          echo "========================="
+          echo "Your app is available at: http://$ROUTE"
+          echo "========================="
