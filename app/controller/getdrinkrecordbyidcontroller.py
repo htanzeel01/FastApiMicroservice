@@ -3,7 +3,7 @@ from app.model.drinkrecord import DrinkRecord
 from app.service.drinkrecordservice import get_drink_record_by_id
 from app.authentication.auth import require_roles, TokenData
 
-router = APIRouter(prefix="/api/drinkrecords", tags=["Drink Records"])
+router = APIRouter(prefix="/api", tags=["Drink Records"])
 
 @router.get("/byid", response_model=DrinkRecord, summary="Get Drink Record by ID")
 async def read_drink_record_by_id(id: str = None,current_user: TokenData = Depends(require_roles(["ADMINS"]))

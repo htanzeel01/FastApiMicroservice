@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from app.authentication.auth import TokenData, require_roles
 from app.service.patientservice import get_daily_goal_by_id, get_patient_id_by_phone_number
 
-router = APIRouter(prefix="/api/patients", tags=["Patients"])
+router = APIRouter(prefix="/api", tags=["Patients"])
 
 @router.get("/get_daily_goal_by_id", response_model=float)
 async def read_daily_goal(

@@ -5,7 +5,7 @@ from typing import List
 from app.authentication.auth import TokenData, require_roles
 from app.service.patientservice import get_patient_id_by_phone_number
 
-router = APIRouter(prefix="/api/drinkrecords", tags=["Drink Records"])
+router = APIRouter(prefix="/api", tags=["Drink Records"])
 
 
 @router.get("/get_patient_records", response_model=List[DrinkRecord])

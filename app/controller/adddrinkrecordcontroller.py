@@ -5,12 +5,12 @@ from app.authentication.auth import TokenData, require_roles
 from datetime import date
 from app.service.patientservice import get_patient_id_by_phone_number
 
-router = APIRouter(prefix="/api/drinkrecords", tags=["Drink Records"])
+router = APIRouter(prefix="/api", tags=["Drink Records"])
 
-@router.post("/", response_model=DrinkRecord, status_code=status.HTTP_201_CREATED)
+@router.post("/AddRecord", response_model=DrinkRecord, status_code=status.HTTP_201_CREATED)
 async def create_drink_record(
     record: DrinkRecord,
-    current_user: TokenData = Depends(require_roles(["PATIENT", "DRINKAPPUSERS", "CAREGIVERS", "ADMINS"]))
+    current_user: TokenData = Depends(require_roles(["PATIENT", "CAREGIVERS", "ADMINS"]))
 ):
     try:
         # Optionally, associate the record with the current user

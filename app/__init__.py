@@ -9,7 +9,7 @@ from app.controller.getdrinkrecordbyidcontroller import router as getbyid
 from app.controller.getpatientamountcontroller import router as getamount
 from app.controller.dailygoalcheckcontroller import router as dailygoal
 from app.controller.updatedailygoalcontroller import router as update_dailygoal
-from app.controller.getphonnumbercontroller import router as getphone
+from app.controller.adddrinkrecordcaregiver import router as add_record_caregiver
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -42,7 +42,7 @@ def create_app() -> FastAPI:
     app.include_router(getamount)
     app.include_router(dailygoal)
     app.include_router(update_dailygoal)
-    app.include_router(getphone)
+    app.include_router(add_record_caregiver)
 
     # Customize OpenAPI schema to include security schemes
     def custom_openapi():

@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from app.authentication.auth import require_roles  # Ensure this is imported from your auth module
 from app.authentication.auth import TokenData  # Import the TokenData class
 
-router = APIRouter(prefix="/api/patients", tags=["Patients"])
+router = APIRouter(prefix="/api", tags=["Patients"])
 
 
 # Define a model for request body validation
@@ -22,7 +22,7 @@ async def update_patient_daily_goal(
         phone_number = current_user.phone_number
         print(f"Phone number from token: {phone_number}")
 
-        # Example: Use phone_number to get patient ID (pseudo-code)
+        # Example: Use phone_number to get patient ID
         patient_id = get_patient_id_by_phone_number(phone_number)
         # if patient_id_from_service != patient_id:
         #     raise HTTPException(status_code=403, detail="Unauthorized access to this patient's data")
