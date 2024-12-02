@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api", tags=["Drink Records"])
 @router.post("/AddRecord", response_model=DrinkRecord, status_code=status.HTTP_201_CREATED)
 async def create_drink_record(
     record: DrinkRecord,
-    current_user: TokenData = Depends(require_roles(["PATIENT", "CAREGIVERS", "ADMINS"]))
+    current_user: TokenData = Depends(require_roles(["PATIENT", "CARE_GIVER", "ADMIN"]))
 ):
     try:
         # Optionally, associate the record with the current user

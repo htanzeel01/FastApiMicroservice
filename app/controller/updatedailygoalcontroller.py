@@ -15,7 +15,7 @@ class UpdateDailyGoalRequest(BaseModel):
 @router.put("/daily_goal", response_model=dict)
 async def update_patient_daily_goal(
         request: UpdateDailyGoalRequest,
-        current_user: TokenData = Depends(require_roles(["PATIENT", "CAREGIVERS", "ADMINS"]))
+        current_user: TokenData = Depends(require_roles(["PATIENT", "CARE_GIVER", "ADMIN"]))
 ):
     try:
         # Get the phone number from the current user

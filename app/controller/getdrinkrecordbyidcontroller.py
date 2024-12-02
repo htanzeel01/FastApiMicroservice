@@ -6,7 +6,7 @@ from app.authentication.auth import require_roles, TokenData
 router = APIRouter(prefix="/api", tags=["Drink Records"])
 
 @router.get("/byid", response_model=DrinkRecord, summary="Get Drink Record by ID")
-async def read_drink_record_by_id(id: str = None,current_user: TokenData = Depends(require_roles(["ADMINS"]))
+async def read_drink_record_by_id(id: str = None,current_user: TokenData = Depends(require_roles(["ADMIN"]))
 ):
 
     # Authentication and role checks are enforced by dependencies

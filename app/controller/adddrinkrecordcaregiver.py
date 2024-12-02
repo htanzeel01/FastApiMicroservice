@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api", tags=["CareGiver"])
 async def create_drink_record_caregiver(
         record: DrinkRecord,
         patient_phone_number: str,  # Accept phone number as a query parameter
-        current_user: TokenData = Depends(require_roles(["CAREGIVERS", "ADMINS"]))
+        current_user: TokenData = Depends(require_roles(["CARE_GIVER", "ADMIN"]))
 ):
     try:
         # Fetch patient_id using patient_phone_number

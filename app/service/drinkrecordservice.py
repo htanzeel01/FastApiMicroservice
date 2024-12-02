@@ -72,7 +72,7 @@ def update_drink_record(record_id: str, new_amount_ml: float) -> DrinkRecord:
         item = items[0]
         item['amount_ml'] = new_amount_ml
 
-        cosmos_db.container.replace_item(item=item['id'], body=item)
+        cosmos_db.drink_records_container.replace_item(item=item['id'], body=item)
 
         return DrinkRecord(**item)
     except exceptions.CosmosHttpResponseError as e:
