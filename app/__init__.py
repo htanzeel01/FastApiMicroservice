@@ -6,7 +6,6 @@ from app.controller.adddrinkrecordcontroller import router as add_drinks
 from app.controller.getdrinkrecordsforpatientcontroller import router as get_patients_records
 from app.controller.updatedrinkrecordcontroller import router as update_records
 from app.controller.getdrinkrecordbyidcontroller import router as getbyid
-from app.controller.getpatientamountcontroller import router as getamount
 from app.controller.dailygoalcheckcontroller import router as dailygoal
 from app.controller.updatedailygoalcontroller import router as update_dailygoal
 from app.controller.adddrinkrecordcaregiver import router as add_record_caregiver
@@ -39,7 +38,6 @@ def create_app() -> FastAPI:
     app.include_router(get_patients_records)
     app.include_router(update_records)
     app.include_router(getbyid)
-    app.include_router(getamount)
     app.include_router(dailygoal)
     app.include_router(update_dailygoal)
     app.include_router(add_record_caregiver)
