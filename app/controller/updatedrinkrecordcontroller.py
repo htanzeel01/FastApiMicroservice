@@ -5,7 +5,7 @@ from app.authentication.auth import TokenData, require_roles
 from app.model.drinkrecord import DrinkRecord
 from app.service.drinkrecordservice import update_drink_record
 
-router = APIRouter(prefix="/api", tags=["Drink Records"])
+router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 
 class UpdateDrinkRecordRequest(BaseModel):
     amount_ml: float

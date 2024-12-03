@@ -9,9 +9,9 @@ import uuid
 
 class DrinkRecord(BaseModel):
     Id: str = Field(default_factory=lambda: str(uuid4()), alias="id")
-    patient_id: str
+    patient_id: Optional[str] = None  # Make patient_id optional
     amount_ml: float
-    date = date.today()
+    date: Optional[date] = None  # Make date optional
 
 
     @validator('amount_ml')

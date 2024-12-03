@@ -5,11 +5,11 @@ from app.authentication.auth import TokenData, require_roles
 from datetime import date
 from app.service.patientservice import get_patient_id_by_phone_number
 
-router = APIRouter(prefix="/api", tags=["CareGiver"])
+router = APIRouter(prefix="/caregiver/drinkrecord", tags=["CareGiver"])
 
 
 # Controller for the caregiver to input patient drink record
-@router.post("/addRecord", response_model=DrinkRecord, status_code=status.HTTP_201_CREATED)
+@router.post("/addrecord", response_model=DrinkRecord, status_code=status.HTTP_201_CREATED)
 async def create_drink_record_caregiver(
         record: DrinkRecord,
         patient_phone_number: str,  # Accept phone number as a query parameter
