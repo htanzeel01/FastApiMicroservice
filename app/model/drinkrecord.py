@@ -11,7 +11,7 @@ class DrinkRecord(BaseModel):
     Id: str = Field(default_factory=lambda: str(uuid4()), alias="id")
     patient_id: Optional[str] = None  # Make patient_id optional
     amount_ml: float
-    date: Optional[date] = None  # Make date optional
+    date = date.today()
 
 
     @validator('amount_ml')
@@ -20,12 +20,12 @@ class DrinkRecord(BaseModel):
             raise ValueError('amount_ml must be a positive number')
         return v
 
-        # Validator to ensure the date field gets formatted correctly as a string
-        @validator("date", pre=True, always=True)
-        def format_date(cls, v):
-            if isinstance(v, date):
-                return v.isoformat()  # Convert date to "YYYY-MM-DD"
-            return v
+        # # Validator to ensure the date field gets formatted correctly as a string
+        # @validator("date", pre=True, always=True)
+        # def format_date(cls, v):
+        #     if isinstance(v, date):
+        #         return v.isoformat()  # Convert date to "YYYY-MM-DD"
+        #     return v
 
         class Config:
             # Pydantic configuration to serialize date objects as strings

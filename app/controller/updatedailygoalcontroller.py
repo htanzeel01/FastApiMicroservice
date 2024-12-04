@@ -12,7 +12,7 @@ class UpdateDailyGoalRequest(BaseModel):
     new_goal: float
 
 
-@router.put("/update_daily_goal", response_model=dict)
+@router.put("/update-daily-goal", response_model=dict)
 async def update_patient_daily_goal(
         request: UpdateDailyGoalRequest,
         current_user: TokenData = Depends(require_roles(["PATIENT", "CARE_GIVER", "ADMIN"]))

@@ -9,7 +9,7 @@ import logging
 router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 logger = logging.getLogger("drink_records")
 
-@router.get("/get_patient_records", response_model=List[DrinkRecord])
+@router.get("/get-patient-records", response_model=List[DrinkRecord])
 async def read_drink_record(
         patient_id: str = None,
         current_user: TokenData = Depends(require_roles(["PATIENT", "DRINKAPPUSERS", "CARE_GIVER", "ADMIN"]))

@@ -5,6 +5,7 @@ from app.model.drinkrecord import DrinkRecord
 from azure.cosmos import exceptions
 from typing import List
 from app.service.patientservice import get_daily_goal_by_id
+from datetime import date
 
 def add_drink_record(record: DrinkRecord) -> DrinkRecord:
     try:
@@ -84,15 +85,18 @@ def daily_goal_check(patient_id: str) -> str:
     try:
         # Get drink records
         drink_records = get_drink_record(patient_id)
-        #print(f"Drink records for patient {patient_id}: {drink_records}")  # Debug statement
+        # Filter records for today
+        today = date.today()
+        today_records = [record for record in drink_records if record.date == today]
+        #print(f"Drink records for patient {patient_id} today: {today_records}")  # Debug statement
 
         # Get daily goal
         daily_goal = get_daily_goal_by_id(patient_id)
         #print(f"Daily goal for patient {patient_id}: {daily_goal}")  # Debug statement
 
-        # Calculate total amount drunk
-        total_amount = sum(record.amount_ml for record in drink_records)
-        #print(f"Total amount drunk by patient {patient_id}: {total_amount}")  # Debug statement
+        # Calculate total amount drunk today
+        total_amount = sum(record.amount_ml for record in today_records)
+        #print(f"Total amount drunk by patient {patient_id} today: {total_amount}")  # Debug statement
 
         # Compare with daily goal
         if total_amount >= daily_goal:

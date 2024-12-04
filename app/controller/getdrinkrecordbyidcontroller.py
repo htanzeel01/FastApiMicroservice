@@ -5,7 +5,7 @@ from app.authentication.auth import require_roles, TokenData
 
 router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 
-@router.get("/getdrinkrecordbyid", response_model=DrinkRecord, summary="Get Drink Record by ID")
+@router.get("/get-drinkrecord-by-id", response_model=DrinkRecord, summary="Get Drink Record by ID")
 async def read_drink_record_by_id(id: str = None,current_user: TokenData = Depends(require_roles(["ADMIN"]))
 ):
 
