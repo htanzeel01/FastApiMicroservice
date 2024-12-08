@@ -38,3 +38,4 @@ media/
 # Other
 .DS_Store
 Thumbs.db
+local.settings.json
