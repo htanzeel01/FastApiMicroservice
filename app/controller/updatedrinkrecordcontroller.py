@@ -7,11 +7,10 @@ from app.service.drinkrecordservice import update_drink_record
 
 router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 
-class UpdateDrinkRecordRequest(BaseModel):
-    amount_ml: float
+
 
 @router.put("/update-drink-record", response_model=DrinkRecord)
-async def edit_drink_record(record_id: str, update_request: UpdateDrinkRecordRequest,
+async def edit_drink_record(record_id: str, update_request: DrinkRecord,
         current_user: TokenData = Depends(require_roles(["PATIENT","CARE_GIVER", "ADMIN"]))):
     try:
         updated_record = update_drink_record(record_id=record_id, new_amount_ml=update_request.amount_ml)

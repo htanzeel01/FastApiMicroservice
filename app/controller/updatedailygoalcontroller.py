@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from app.service.patientservice import update_daily_goal_by_id, get_patient_id_by_phone_number
-from pydantic import BaseModel
+from app.model.patient import Patient
 from app.authentication.auth import require_roles  # Ensure this is imported from your auth module
 from app.authentication.auth import TokenData  # Import the TokenData class
 
@@ -8,13 +8,11 @@ router = APIRouter(prefix="/patient", tags=["Patients"])
 
 
 # Define a model for request body validation
-class UpdateDailyGoalRequest(BaseModel):
-    new_goal: float
 
 
-@router.put("/update-daily-goal", response_model=dict)
+@router.put("/update-daily-goal", response_model=None)
 async def update_patient_daily_goal(
-        request: UpdateDailyGoalRequest,
+        request: Patient,
         current_user: TokenData = Depends(require_roles(["PATIENT", "CARE_GIVER", "ADMIN"]))
 ):
     try:
@@ -23,7 +21,7 @@ async def update_patient_daily_goal(
         # Example: Use phone_number to get patient ID
         patient_id = get_patient_id_by_phone_number(phone_number)
         # Call the service method to update the daily goal
-        update_daily_goal_by_id(patient_id, request.new_goal)
+        update_daily_goal_by_id(patient_id,request.daily_goal)
         return {"message": "Daily goal updated successfully"}
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

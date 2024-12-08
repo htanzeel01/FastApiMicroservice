@@ -8,7 +8,6 @@ router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 @router.get("/get-drinkrecord-by-id", response_model=DrinkRecord, summary="Get Drink Record by ID")
 async def read_drink_record_by_id(id: str = None,current_user: TokenData = Depends(require_roles(["ADMIN"]))
 ):
-
     # Authentication and role checks are enforced by dependencies
     try:
         record = get_drink_record_by_id(id=id)
