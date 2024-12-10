@@ -79,17 +79,27 @@ jobs:
             --name=${{ env.APP_NAME }} \
             -n ${{ env.OPENSHIFT_NAMESPACE }}
             
-          oc set resources deployment/${{ env.APP_NAME }} --requests=cpu=200m,memory=250Mi --limits=cpu=1,memory=1Gi -n ${{ env.OPENSHIFT_NAMESPACE }} 
-          
-          # Expose the service and enable HTTPS with TLS edge termination
+          # Set reduced resources
+          oc set resources deployment/${{ env.APP_NAME }} \
+            --requests=cpu=100m,memory=100Mi \
+            --limits=cpu=500m,memory=200Mi \
+            -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+          # Scale to 1 replicas (example, can be adjusted)
+          oc scale deployment/${{ env.APP_NAME }} --replicas=1 -n ${{ env.OPENSHIFT_NAMESPACE }}
+
+          # Expose the service and configure as a LoadBalancer
           oc expose svc/${{ env.APP_NAME }} --port=${{ env.APP_PORT }} -n ${{ env.OPENSHIFT_NAMESPACE }}
+          oc patch svc/${{ env.APP_NAME }} -n ${{ env.OPENSHIFT_NAMESPACE }} \
+            -p '{"spec":{"type":"LoadBalancer"}}'
+
+          # Enable HTTPS with TLS edge termination
           oc patch route/${{ env.APP_NAME }} -n ${{ env.OPENSHIFT_NAMESPACE }} -p '{"spec":{"tls":{"termination":"edge"}}}'
 
           # Redirect HTTP traffic to HTTPS (optional, recommended for production)
           oc annotate route/${{ env.APP_NAME }} \
             haproxy.router.openshift.io/redirect-to-https=true \
             -n ${{ env.OPENSHIFT_NAMESPACE }}
-
 
       # Step 10: Inject Environment Variables into Deployment
       - name: Inject Environment Variables into Deployment
