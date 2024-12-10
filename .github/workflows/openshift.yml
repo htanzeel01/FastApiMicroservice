@@ -69,7 +69,11 @@ jobs:
       # Step 8: Delete Existing Resources (if any)
       - name: Delete Existing Resources
         run: |
-          oc delete all --selector app=${{ env.APP_NAME }} --ignore-not-found
+          # Clean up old resources if they exist
+          oc delete route/${{ env.APP_NAME }} --ignore-not-found -n ${{ env.OPENSHIFT_NAMESPACE }}
+          oc delete service/${{ env.APP_NAME }} --ignore-not-found -n ${{ env.OPENSHIFT_NAMESPACE }}
+          oc delete deployment/${{ env.APP_NAME }} --ignore-not-found -n ${{ env.OPENSHIFT_NAMESPACE }}
+          oc delete replicasets -l app=${{ env.APP_NAME }} -n ${{ env.OPENSHIFT_NAMESPACE }} --ignore-not-found
           
       # Step 9: Deploy and Expose OpenShift App
       - name: Deploy OpenShift App
