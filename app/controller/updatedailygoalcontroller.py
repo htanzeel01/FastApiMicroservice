@@ -10,7 +10,7 @@ router = APIRouter(prefix="/patient", tags=["Patients"])
 # Define a model for request body validation
 
 
-@router.put("/update-daily-goal", response_model=None)
+@router.put("/dailygoal", response_model=None)
 async def update_patient_daily_goal(
         request: Patient,
         current_user: TokenData = Depends(require_roles(["PATIENT", "CARE_GIVER", "ADMIN"]))

@@ -5,9 +5,9 @@ from app.service.patientservice import get_patient_id_by_phone_number
 from app.authentication.auth import TokenData, require_roles
 from typing import List
 
-router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
+router = APIRouter(prefix="/drinkrecords", tags=["DrinkRecords"])
 
-@router.get("/get-patient-records", response_model=List[DrinkRecord], summary="Retrieve patient drink records")
+@router.get("/patient", response_model=List[DrinkRecord], summary="Retrieve patient drink records")
 async def read_drink_record(
     patient_id: str = None,
     current_user: TokenData = Depends(require_roles(["PATIENT", "DRINKAPPUSERS", "CARE_GIVER", "ADMIN"]))

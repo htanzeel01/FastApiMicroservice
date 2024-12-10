@@ -9,7 +9,7 @@ router = APIRouter(prefix="/drinkrecord", tags=["Drink Records"])
 
 
 
-@router.put("/update-drink-record", response_model=DrinkRecord)
+@router.put("/drinkrecord", response_model=DrinkRecord)
 async def edit_drink_record(record_id: str, update_request: DrinkRecord,
         current_user: TokenData = Depends(require_roles(["PATIENT","CARE_GIVER", "ADMIN"]))):
     try:

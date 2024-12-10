@@ -4,9 +4,9 @@ from app.authentication.auth import TokenData, require_roles
 from app.service.drinkrecordservice import daily_goal_check
 from app.service.patientservice import get_patient_id_by_phone_number
 
-router = APIRouter(prefix="/patient", tags=["Patients"])
+router = APIRouter(prefix="/patients", tags=["Patients"])
 
-@router.get("/daily-goal-check", response_model=str)
+@router.get("/dailygoalcheck", response_model=str)
 async def check_daily_goal(patient_id: str = None, current_user: TokenData = Depends(require_roles(["PATIENT","CARE_GIVER"]))
 ):
     try:
