@@ -89,8 +89,8 @@ jobs:
             --limits=cpu=500m,memory=200Mi \
             -n ${{ env.OPENSHIFT_NAMESPACE }}
 
-          # Scale to 1 replicas (example, can be adjusted)
-          oc scale deployment/${{ env.APP_NAME }} --replicas=1 -n ${{ env.OPENSHIFT_NAMESPACE }}
+          # Scale to 2 replicas (example, can be adjusted)
+          oc scale deployment/${{ env.APP_NAME }} --replicas=2 -n ${{ env.OPENSHIFT_NAMESPACE }}
 
           # Expose the service and configure as a LoadBalancer
           oc expose svc/${{ env.APP_NAME }} --port=${{ env.APP_PORT }} -n ${{ env.OPENSHIFT_NAMESPACE }}
